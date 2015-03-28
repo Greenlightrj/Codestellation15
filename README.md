@@ -1,6 +1,6 @@
-**Codestellation 2015 hackathon hack*
+##Codestellation 2015 hackathon hack
 
-****Some sort of music program*
+####Some sort of music program
 
 by Aubrey Dority, Rebecca Jordan, and Matt Ruehle
 
