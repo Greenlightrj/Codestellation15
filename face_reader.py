@@ -7,6 +7,7 @@ import cv2
 import numpy
 import subprocess
 import time
+import serial
 
 
 class face_reader:
@@ -22,6 +23,8 @@ class face_reader:
         self.left_height = None
         self.right_height = None
         self.player = 'aplay'
+        self.usbport = 
+        self.ser = serial.Serial(self.usbport,9600,timeout=1)
 
 
     def update_face_centers(self):
@@ -54,8 +57,10 @@ class face_reader:
         self.update_face_centers()
         if self.left_height != None:
             tone_to_play = self.map_lh_to_tone()
-            cmd = '{} {}'.format(self.player, 'tone_{}.wav'.format(tone_to_play))
-            popen = subprocess.Popen(cmd, shell=True)
+            #cmd = '{} {}'.format(self.player, 'tone_{}.wav'.format(tone_to_play))
+            #popen = subprocess.Popen(cmd, shell=True)
+            angle = 25*tone_to_play
+            self.move_servo(1, angle)
             # popen.communicate()
             # time.sleep(1)
         cv2.imshow('frame', self.frame)
@@ -79,6 +84,13 @@ class face_reader:
         else:
             return 0
 
+    def move_servo(self, servo, angle):
+        if (0 <= angle <= 180):
+            self.ser.write(chr(255))
+            self.ser.write(chr(servo))
+            self.ser.write(chr(angle))
+        else:
+            print "something went terribly wrong"
 
     def release(self):
         self.video_capture.release()
