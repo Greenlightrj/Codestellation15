@@ -1,0 +1,27 @@
+TO DO LIST
+edit when done
+
+#IMPORTANT
+    ##OPENCV
+    Detect face only when in left half of screen
+    Detect face only when in right half of screen
+    Return output signal
+
+    ##ARDUINISH
+    Take some kind of input
+    ???
+    Output signal to motor
+
+    ##FLAILY BITS
+    Make sound upon signal
+    Put quadcopter back together without losing screws
+    CAD needed parts
+
+
+
+#NOT SO IMPORTANT
+Draw line between two halves of screen
+Make display window resizable
+Make display window close when x is pressed (for sanity)
+Add moustaches/monocles to faces
+
