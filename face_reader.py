@@ -23,7 +23,7 @@ class face_reader:
         self.left_height = None
         self.right_height = None
         self.player = 'aplay'
-        self.ser = serial.Serial('/dev/ttyACM0', 9600)
+        # self.ser = serial.Serial('/dev/ttyACM0', 9600)
         # self.usbport =  #get from ls /dev
         # self.ser = serial.Serial(self.usbport,9600,timeout=1)
 
@@ -58,32 +58,60 @@ class face_reader:
         self.update_face_centers()
         if self.left_height != None:
             tone_to_play = self.map_lh_to_tone()
-            #cmd = '{} {}'.format(self.player, 'tone_{}.wav'.format(tone_to_play))
-            #popen = subprocess.Popen(cmd, shell=True)
-            angle = 25*tone_to_play
-            self.move_servo(1, angle)
+            cmd = '{} {}'.format(self.player, 'tone_{}.wav'.format(tone_to_play))
+            popen = subprocess.Popen(cmd, shell=True)
+            # angle = 25*tone_to_play
+            # self.move_servo(1, angle)
             # popen.communicate()
             # time.sleep(1)
+        if self.right_height != None:
+            right_tone_to_play = self.map_rh_to_tone()
+            cmd = '{} {}'.format(self.player, 'tone_{}.wav'.format(right_tone_to_play))
+            popen = subprocess.Popen(cmd, shell=True)
         cv2.imshow('frame', self.frame)
 
 
     def map_lh_to_tone(self):
-        if self.left_height < 50:
+        sh = self.left_height
+        h = self.frame_dimensions[1]
+        if sh < h/8:
             return 7
-        if self.left_height < 100:
+        elif sh < 2*h/8:
             return 6
-        elif self.left_height < 150:
+        elif sh < 3*h/8:
             return 5
-        elif self.left_height < 200:
+        elif sh < 4*h/8:
             return 4
-        elif self.left_height < 250:
+        elif sh < 5*h/8:
             return 3
-        elif self.left_height < 300:
+        elif sh < 6*h/8:
             return 2
-        elif self.left_height < 350:
+        elif sh < 7*h/8:
             return 1
         else:
             return 0
+
+
+    def map_rh_to_tone(self):
+        sh = self.right_height
+        h = self.frame_dimensions[1]
+        if sh < h/8:
+            return 7
+        elif sh < 2*h/8:
+            return 6
+        elif sh < 3*h/8:
+            return 5
+        elif sh < 4*h/8:
+            return 4
+        elif sh < 5*h/8:
+            return 3
+        elif sh < 6*h/8:
+            return 2
+        elif sh < 7*h/8:
+            return 1
+        else:
+            return 0
+
 
     def map_lh_to_servo_position(self):
         h = self.frame_dimensions[1]
