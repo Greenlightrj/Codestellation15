@@ -23,8 +23,9 @@ class face_reader:
         self.left_height = None
         self.right_height = None
         self.player = 'aplay'
-        self.usbport = 
-        self.ser = serial.Serial(self.usbport,9600,timeout=1)
+        self.ser = serial.Serial('/dev/ttyACM0', 9600)
+        # self.usbport =  #get from ls /dev
+        # self.ser = serial.Serial(self.usbport,9600,timeout=1)
 
 
     def update_face_centers(self):
@@ -84,13 +85,40 @@ class face_reader:
         else:
             return 0
 
-    def move_servo(self, servo, angle):
-        if (0 <= angle <= 180):
-            self.ser.write(chr(255))
-            self.ser.write(chr(servo))
-            self.ser.write(chr(angle))
+    def map_lh_to_servo_position(self):
+        h = self.frame_dimensions[1]
+        lh = self.left_height
+        if lh < (h/5):
+            return 1
+        elif lh < 2*h/5:
+            return 2
+        elif lh < 3*h/5:
+            return 3
+        elif lh < 4*h/5:
+            return 4
+        elif lh <= h:
+            return 5
         else:
-            print "something went terribly wrong"
+            return 0
+
+
+    def move_servo(self):
+        """
+        moves servo.
+        """
+        s_pos_dict = {0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e', 5: 'f'}
+        self.update_face_centers()
+        s_pos = self.map_lh_to_servo_position()
+        self.ser.write(str(chr(ord(s_pos_dict[s_pos]))))
+
+
+    # def move_servo(self, servo, angle):
+    #     if (0 <= angle <= 180):
+    #         self.ser.write(chr(255))
+    #         self.ser.write(chr(servo))
+    #         self.ser.write(chr(angle))
+    #     else:
+    #         print "something went terribly wrong"
 
     def release(self):
         self.video_capture.release()
